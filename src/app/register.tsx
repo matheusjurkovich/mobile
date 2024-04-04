@@ -1,20 +1,35 @@
-import { View, Image, StatusBar } from "react-native";
+import { View, Image, StatusBar, Alert } from "react-native";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { useState } from "react";
 
 import { Input } from "@/components/Input";
 import { colors } from "@/styles/colors";
 import { Button } from "@/components/Button";
 
 export default function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  function handleRegister() {
+    if (!name.trim()) {
+      return Alert.alert("Inscrição", "Digite seu nome");
+    }
+    if (!email.trim()) {
+      return Alert.alert("Inscrição", "Digite seu e-mail");
+    }
+    router.push("/ticket");
+  }
   return (
     <View className="flex-1 bg-green-500 items-center justify-center p-8">
       <StatusBar barStyle="light-content" />
+
       <Image
         source={require("@/assets/logo.png")}
         className="h-16"
         resizeMode="contain"
       />
+
       <View className="w-full mt-12 gap-3">
         <Input>
           <FontAwesome6
@@ -22,17 +37,24 @@ export default function Register() {
             size={20}
             color={colors.green[200]}
           />
-          <Input.Field placeholder="Nome Completo" />
+          <Input.Field placeholder="Nome Completo" onChangeText={setName} />
         </Input>
+
         <Input>
           <MaterialIcons
             name="alternate-email"
             size={20}
             color={colors.green[200]}
           />
-          <Input.Field placeholder="E-mail" keyboardType="email-address" />
+          <Input.Field
+            placeholder="E-mail"
+            keyboardType="email-address"
+            onChangeText={setEmail}
+          />
         </Input>
-        <Button title="Realizar inscrição" />
+
+        <Button title="Realizar inscrição" onPress={handleRegister} />
+
         <Link
           href="/"
           className="text-gray-100 text-base font-bold text-center mt-8"
