@@ -12,6 +12,8 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { colors } from "@/styles/colors";
+import { useBadgeStore } from "@/store/badge-store";
+import { Redirect } from "expo-router";
 
 import { Header } from "@/components/Header";
 import { Credential } from "@/components/Credential";
@@ -21,6 +23,7 @@ import { QRCode } from "@/components/Qrcode";
 export default function Ticket() {
   const [image, setImage] = useState("");
   const [expandQRCode, setExpandQRCode] = useState(false);
+  const badgeStore = useBadgeStore();
 
   async function handleSelectImage() {
     try {
@@ -39,6 +42,9 @@ export default function Ticket() {
     }
   }
 
+  if (!badgeStore.data?.checkInURL) {
+    return <Redirect href="/" />;
+  }
   return (
     <View className="flex-1 bg-green-500">
       <StatusBar barStyle="light-content" />
@@ -49,6 +55,7 @@ export default function Ticket() {
         showsVerticalScrollIndicator={false}
       >
         <Credential
+          data={badgeStore.data}
           image={image}
           onChangeAvatar={handleSelectImage}
           onExpandQRCode={() => setExpandQRCode(true)}
@@ -69,7 +76,11 @@ export default function Ticket() {
         </Text>
 
         <Button title="Compartilhar" />
-        <TouchableOpacity activeOpacity={0.5} className="mt-10">
+        <TouchableOpacity
+          activeOpacity={0.5}
+          className="mt-10"
+          onPress={() => badgeStore.remove()}
+        >
           <Text className="text-base text-white font-bold text-center">
             Remover Ingresso
           </Text>
@@ -78,7 +89,7 @@ export default function Ticket() {
 
       <Modal visible={expandQRCode} statusBarTranslucent animationType="slide">
         <View className="flex-1 bg-green-500 items-center justify-center">
-          <QRCode value="teste" size={300} />
+          <QRCode value={badgeStore.data.checkInURL} size={300} />
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={() => setExpandQRCode(false)}
