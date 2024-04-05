@@ -12,13 +12,13 @@ import { Feather } from "@expo/vector-icons";
 import { QRCode } from "@/components/Qrcode";
 
 type Props = {
-  data: BadgeStore
+  data: BadgeStore;
   image?: string;
   onChangeAvatar?: () => void;
   onExpandQRCode?: () => void;
 };
 
-export function Credential({data, onChangeAvatar, onExpandQRCode, image }: Props) {
+export function Credential({ data, onChangeAvatar, onExpandQRCode }: Props) {
   const badgeStore = useBadgeStore();
 
   return (
@@ -34,18 +34,18 @@ export function Credential({data, onChangeAvatar, onExpandQRCode, image }: Props
           className="px-6 py-8 h-40 items-center self-stretch border-b border-white/10 overflow-hidden"
         >
           <View className="w-full flex-row items-center justify-between">
-            <Text className="text-zinc-50 text-sm font-bold">Unite Summit</Text>
             <Text className="text-zinc-50 text-sm font-bold">
-              #{data.id}
+              {data.eventTitle}
             </Text>
+            <Text className="text-zinc-50 text-sm font-bold">#{data.id}</Text>
           </View>
           <View className="w-40 h-40 bg-black rounded-full" />
         </ImageBackground>
 
-        {image ? (
+        {data.image ? (
           <TouchableOpacity activeOpacity={0.8} onPress={onChangeAvatar}>
             <Image
-              source={{ uri: image }}
+              source={{ uri: data.image }}
               className="w-36 h-36 rounded-full -mt-24"
             />
           </TouchableOpacity>
